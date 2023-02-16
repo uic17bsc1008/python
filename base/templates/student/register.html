@@ -1,0 +1,270 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    {% if page == 'edit' %}
+    <h1 class="h4 mb-0 text-gray-800">Student Update</h1>
+    {% else %}
+    <h1 class="h4 mb-0 text-gray-800">Student Register</h1>
+    {% endif %}
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div id="success" id="student-load"></div>
+        {% if page == 'edit' %}
+        <form action="{% url 'student-update' %}" id="student_update" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="student_id" id="student_id" value="{{student.id}}">
+            <div class="form-group mb-2">
+                <input type="text" name="fullname" class="form-control" value="{{student.fullname}}" placeholder="Full Name">
+                <span id="fullname"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="phone" class="form-control" value="{{student.phone}}" placeholder="Phone Number">
+                <span id="phone"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="email" class="form-control" value="{{student.email}}" placeholder="Email:example@mail.com">
+                <span id="email"></span>
+            </div>
+            <div class="form-group mb-2">
+                <textarea name="address" id="" cols="30" rows="4" class="form-control" placeholder="Permanent Address">{{student.address}}</textarea>
+                <span id="address"></span>
+            </div>
+            <div class="form-group mb-2">
+                <div class="row">
+                    <div class="col">
+                        <label for="" class="form-label">Guardian</label>
+                        <input type="text" name="guardian" class="form-control" value="{{student.guardian}}" placeholder="Guardian Name">
+                        <span id="guardian"></span>
+                    </div>
+                    <div class="col">
+                        <label for="" class="form-label">Reference</label>
+                        <input type="text" name="reference" class="form-control" value="{{student.reference}}" placeholder="Reference">
+                        <span id="reference"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-2">
+                <select name="course" id="" class="form-control form-control-sm col-md-3">
+                    <option value="">-----Course-----</option>
+                    {% for course in courses %}
+                    <option value="{{course.id}}" {% if course.id == student.course.id %}selected="selected"{% endif %}>{{course.coursename|capfirst}}</option>
+                    {% endfor %}
+                </select>
+                <span id="course"></span>
+                <select name="batch" id="" class="form-control form-control-sm col-md-3 ml-2">
+                    <option value="">-----Batches-----</option>
+                    {% for batch in batches %}
+                    <option value="{{batch.id}}" {% if batch.id == student.batch.id %}selected="selected"{% endif %}>{{batch.name|capfirst}}</option>
+                    {% endfor %}
+                </select>
+                <a href="{% url 'student-delete' student.id %}" onclick="myFunction()" data-student-id="{{student.id}}" class="btn btn-danger btn-sm col-md-2 ml-auto" id="delete_student">Delete</a>
+                <button type="submit" class="btn btn-primary btn-sm col-md-2 ml-auto">Update</button>
+            </div>
+        </form>
+        {% else %}
+        <form action="{% url 'student-register' %}" id="student_register" method="POST">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <input type="text" name="fullname" class="form-control" placeholder="Full Name">
+                <span id="fullname"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="phone" class="form-control" placeholder="Phone Number">
+                <span id="phone"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="email" class="form-control" placeholder="Email:example@mail.com">
+                <span id="email"></span>
+            </div>
+            <div class="form-group mb-2">
+                <textarea name="address" id="" cols="30" rows="4" class="form-control" placeholder="Permanent Address"></textarea>
+                <span id="address"></span>
+            </div>
+            <div class="input-group mb-2">
+                <select name="course" id="course" class="form-control form-control-sm col-md-3">
+                    <option value="">-----Course-----</option>
+                    {% for course in courses %}
+                    <option value="{{course.id}}">{{course.coursename}}</option>
+                    {% endfor %}
+                </select>
+                <span id="course"></span>
+                <input type="text" class="form-control form-control-sm col-md-2 ml-2 d-none" name="course_code" id="course_code" value="">
+                <button type="submit" class="btn btn-primary btn-sm col-md-3 ml-auto">Register</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+    $('#student_register').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#fullname").text('').removeClass("text-danger");
+                $("#phone").text('').removeClass("text-danger");
+                $("#email").text('').removeClass("text-danger");
+                $("#address").text('').removeClass("text-danger");
+                $("#course").text('').removeClass("text-danger");
+                $('#student_register')[0].reset();
+                $('#course_code')[0].reset();
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+            }
+            else{
+                if(data['fullname']){
+                    $("#fullname").text(data['fullname']).addClass("text-danger");
+                }
+                else{
+                    $("#fullname").text('').removeClass("text-danger");
+                }
+
+                if(data['phone']){
+                    $("#phone").text(data['phone']).addClass("text-danger");
+                }
+                else{
+                    $("#phone").text('').removeClass("text-danger");
+                }
+                if(data['address']){
+                $("#address").text(data['address']).addClass("text-danger");
+                }
+                else{
+                    $("#address").text('').removeClass("text-danger");
+                }
+                if(data['course']){
+                $("#course").text(data['course']).addClass("text-danger");
+                }
+                else{
+                    $("#course").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+
+    $('#student_update').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#fullname").text('').removeClass("text-danger");
+                $("#phone").text('').removeClass("text-danger");
+                $("#email").text('').removeClass("text-danger");
+                $("#address").text('').removeClass("text-danger");
+                $("#guardian").text('').removeClass("text-danger");
+                // $("#reference").text('').removeClass("text-danger");
+                $("#course").text('').removeClass("text-danger");
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+                // window.location.href = "{% url 'student-view' %}";
+            }
+            else{
+                if(data['fullname']){
+                    $("#fullname").text(data['fullname']).addClass("text-danger");
+                }
+                else{
+                    $("#fullname").text('').removeClass("text-danger");
+                }
+
+                if(data['phone']){
+                    $("#phone").text(data['phone']).addClass("text-danger");
+                }
+                else{
+                    $("#phone").text('').removeClass("text-danger");
+                }
+                if(data['address']){
+                $("#address").text(data['address']).addClass("text-danger");
+                }
+                else{
+                    $("#address").text('').removeClass("text-danger");
+                }
+                if(data['guardian']){
+                $("#guardian").text(data['guardian']).addClass("text-danger");
+                }
+                else{
+                    $("#guardian").text('').removeClass("text-danger");
+                }
+                // if(data['reference']){
+                // $("#reference").text(data['reference']).addClass("text-danger");
+                // }
+                // else{
+                //     $("#reference").text('').removeClass("text-danger");
+                // }
+                if(data['course']){
+                $("#course").text(data['course']).addClass("text-danger");
+                }
+                else{
+                    $("#course").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+
+
+    $('#delete_student').on('click',function(e){
+        e.preventDefault();
+        var student_id = $(this).data('student-id');
+        var url = $(this).attr('href');
+        delete_student(student_id,url);
+    });
+    $('#course').on('change',function(e){
+        e.preventDefault();
+        var course_id = $(this).val();
+        getcourse_code(course_id);
+    });
+    });
+
+    function delete_student(id,url){
+        var confirmed = confirm("Are you sure you want to delete?");
+        if (confirmed){
+            $.ajax({
+            type: 'POST',
+            url: url,
+            data: {id:id, csrfmiddlewaretoken: '{{ csrf_token  }}'},
+            success: function (data) {
+                window.location.href = "{% url 'student-view' %}";
+            }
+        });
+        }
+    }
+
+    function getcourse_code(id){
+        // var confirmed = confirm("Do you want to assign course code?");
+        // if (confirmed){
+            $.ajax({
+            type: 'POST',
+            url: "{% url 'course-code' %}",
+            data: {id:id, csrfmiddlewaretoken: '{{ csrf_token  }}'},
+            success: function (data) {
+                if(data['course_code']==''){
+                    $('#course_code').addClass('d-none');
+                }
+                else{
+                    $('#course_code').removeClass('d-none');
+                    $('#course_code').attr('readonly', true);
+                    $('#course_code').val(data['course_code']).attr('value',data['course_code']);
+                }
+
+            }
+        });
+    }
+// }
+</script>
+{% endblock content %}

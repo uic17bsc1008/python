@@ -1,0 +1,139 @@
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Admin</div>
+    </a>
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'dashboard' %}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Candidates
+    </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStudent"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Student</span>
+        </a>
+        <div id="collapseStudent" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage Student:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/student/form/' %}active{% endif %}" href="{% url 'student-form' %}">Register</a>
+                <a class="collapse-item {% if request.path == '/dashboard/student/view/' %}active{% endif %}" href="{% url 'student-view' %}">View</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCourses"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-pen"></i>
+            <span>Classes</span>
+        </a>
+        <div id="collapseCourses" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/course/view/' %}active{% endif %}" href="{% url 'course-view' %}">View Courses</a>
+                <a class="collapse-item {% if request.path == '/dashboard/batch/view/' %}active{% endif %}" href="{% url 'batch-view' %}">View Batch</a>                
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCentre"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-building"></i>
+            <span>Centre</span>
+        </a>
+        <div id="collapseCentre" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage Centre:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/course/view/' %}active{% endif %}" href="">Create Centre</a>
+                <a class="collapse-item {% if request.path == '/dashboard/batch/view/' %}active{% endif %}" href="">View Centre</a>                
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStaff"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Staff</span>
+        </a>
+        <div id="collapseStaff" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage Staff:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/course/view/' %}active{% endif %}" href="">Create Staff</a>
+                <a class="collapse-item {% if request.path == '/dashboard/batch/view/' %}active{% endif %}" href="">Manage Staff</a>                
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCertificates"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-book-reader"></i>
+            <span>Examination</span>
+        </a>
+        <div id="collapseCertificates" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage Exams:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/course/view/' %}active{% endif %}" href="">Generate Certificates</a>
+                <a class="collapse-item {% if request.path == '/dashboard/batch/view/' %}active{% endif %}" href="">Manage Staff</a>                
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCertificates"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-certificate"></i>
+            <span>Certificates</span>
+        </a>
+        <div id="collapseCertificates" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Manage Certificates:</h6>
+                <a class="collapse-item {% if request.path == '/dashboard/course/view/' %}active{% endif %}" href="">Generate Certificates</a>
+                <a class="collapse-item {% if request.path == '/dashboard/batch/view/' %}active{% endif %}" href="">Manage Staff</a>                
+            </div>
+        </div>
+    </li>
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePayment"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-rupee-sign"></i>
+            <span>Payment</span>
+        </a>
+        <div id="collapsePayment" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom Utilities:</h6>
+                <a class="collapse-item" href="utilities-color.html">Colors</a>
+                <a class="collapse-item" href="utilities-border.html">Borders</a>
+                <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                <a class="collapse-item" href="utilities-other.html">Other</a>
+            </div>
+        </div>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+    <!-- Sidebar Message -->
+    <div class="sidebar-card d-none d-lg-flex">
+        <p class="text-center mb-2"><strong>Help and Support</strong> <br>Contact Us <br> +91-9458555598</p>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

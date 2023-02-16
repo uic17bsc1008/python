@@ -1,0 +1,166 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    {% if page == 'edit' %}
+    <h1 class="h4 mb-0 text-gray-800">Batch Update</h1>
+    {% else %}
+    <h1 class="h4 mb-0 text-gray-800">Batch Register</h1>
+    {% endif %}
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div id="success" id="batch-load"></div>
+        {% if page == 'edit' %}
+        <form action="{% url 'batch-update' %}" id="batch_update" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="batch_id" id="batch_id" value="{{batch.id}}">
+            <div class="form-group mb-2">
+                <input type="text" name="name" class="form-control" value="{{batch.name}}">
+                <span id="name"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="batch_co_ordinator" class="form-control" value="{{batch.batch_co_ordinator}}">
+                <span id="batch_co_ordinator"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="timming" class="form-control" value="{{batch.timming}}" placeholder="Time SLot">
+            </div>
+            <div class="input-group mb-2">
+                <a href="{% url 'batch-delete' batch.id %}" onclick="myFunction()" data-batch-id="{{batch.id}}" class="btn btn-danger btn-sm col-md-3 ml-auto " id="delete_batch">Delete</a>
+                <button type="submit" class="btn btn-primary btn-sm col-md-3 ml-auto">Update</button>
+            </div>
+        </form>
+        {% else %}
+        <form action="{% url 'batch-create' %}" id="batch_register" method="POST">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <input type="text" name="name" class="form-control" placeholder="Batch Name">
+                <span id="name"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="batch_co_ordinator" class="form-control" placeholder="Co-ordinator">
+                <span id="batch_co_ordinator"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="timming" class="form-control" placeholder="Time slot">
+                <span id="timming"></span>
+            </div>
+            <div class="input-group">
+                <button type="submit" class="btn btn-primary btn-sm col-md-3 ml-auto">Register</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+    $('#batch_register').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#name").text('').removeClass("text-danger");
+                $("#batch_co_ordinator").text('').removeClass("text-danger");
+                $("#timming").text('').removeClass("text-danger");
+                $('#batch_register')[0].reset();
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+            }
+            else{
+                if(data['name']){
+                    $("#name").text(data['name']).addClass("text-danger");
+                }
+                else{
+                    $("#name").text('').removeClass("text-danger");
+                }
+
+                if(data['batch_co_ordinator']){
+                    $("#batch_co_ordinator").text(data['batch_co_ordinator']).addClass("text-danger");
+                }
+                else{
+                    $("#batch_co_ordinator").text('').removeClass("text-danger");
+                }
+                if(data['timming']){
+                $("#timming").text(data['timming']).addClass("text-danger");
+                }
+                else{
+                    $("#timming").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+
+    $('#batch_update').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#name").text('').removeClass("text-danger");
+                $("#batch_co_ordinator").text('').removeClass("text-danger");
+                $("#timming").text('').removeClass("text-danger");
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+            }
+            else{
+                if(data['name']){
+                    $("#name").text(data['name']).addClass("text-danger");
+                }
+                else{
+                    $("#name").text('').removeClass("text-danger");
+                }
+
+                if(data['batch_co_ordinator']){
+                    $("#batch_co_ordinator").text(data['batch_co_ordinator']).addClass("text-danger");
+                }
+                else{
+                    $("#batch_co_ordinator").text('').removeClass("text-danger");
+                }
+                if(data['timming']){
+                $("#timming").text(data['timming']).addClass("text-danger");
+                }
+                else{
+                    $("#timming").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+
+    $('#delete_batch').on('click',function(e){
+        e.preventDefault();
+        var batch_id = $(this).data('batch-id');
+        var url = $(this).attr('href');
+        delete_batch(batch_id,url);
+    });
+    });
+
+    function delete_batch(id,url){
+        var confirmed = confirm("Are you sure you want to delete?");
+        if (confirmed){
+            $.ajax({
+            type: 'POST',
+            url: url,
+            data: {id:id, csrfmiddlewaretoken: '{{ csrf_token  }}'},
+            success: function (data) {
+                window.location.href = "{% url 'batch-view' %}";
+            }
+        });
+        }
+    }
+</script>
+{% endblock content %}

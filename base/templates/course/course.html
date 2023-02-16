@@ -1,0 +1,190 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    {% if page == 'edit' %}
+    <h1 class="h4 mb-0 text-gray-800">Course Update</h1>
+    {% else %}
+    <h1 class="h4 mb-0 text-gray-800">Course Register</h1>
+    {% endif %}
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div id="success"></div>
+        {% if page == 'edit' %}
+        <form action="{% url 'course-update' %}" method="POST" id="course_update">
+            {% csrf_token %}
+            <input type="hidden" name="course_id" id="course_id" value="{{course.id}}">
+            <div class="form-group mb-2">
+                <input type="text" name="coursename" class="form-control" value="{{course.coursename}}" placeholder="Course Name">
+                <span id="coursename"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="duration" class="form-control" value="{{course.duration}}" placeholder="Course Duration">
+                <span id="duration"></span>
+            </div>
+            <div class="input-group mb-2">
+                <input type="text" name="fees" class="form-control rounded col-md-6" value="{{course.fees}}" placeholder="Fees">
+                <span id="fees"></span>
+                <input type="text" name="course_code" class="form-control rounded col-md-6 ml-2" value="{{course.course_code}}" placeholder="Course code">
+                <span id="course_code"></span>
+            </div>
+            <div class="form-group mb-2">
+                <textarea name="remark" id="" cols="30" rows="4" class="form-control" placeholder="Remark">{{course.remark}}</textarea>
+            </div>
+            <div class="input-group mb-2">
+                <a href="{% url 'course-delete' course.id %}" onclick="myFunction()" data-course-id="{{course.id}}" class="btn btn-danger btn-sm col-md-3 ml-auto " id="delete_course">Delete</a>
+                <button type="submit" id="course_update" class="btn btn-primary btn-sm col-md-3 ml-auto">Update</button>
+            </div>
+        </form>
+        {% else %}
+        <form action="{% url 'course-register' %}" method="POST" id="course_register">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <input type="text" name="coursename" class="form-control" placeholder="Course Name">
+                <span id="coursename"></span>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" name="duration" class="form-control" placeholder="Course Duration">
+                <span id="duration"></span>
+            </div>
+            <div class="input-group mb-2">
+                <input type="text" name="fees" class="form-control rounded col-md-6" placeholder="Fees">
+                <span id="fees"></span>
+                <input type="text" name="course_code" class="form-control rounded col-md-6 ml-2" placeholder="Course code">
+                <span id="course_code"></span>
+            </div>
+            <div class="form-group mb-2">
+                <textarea name="remark" id="" cols="30" rows="4" class="form-control" placeholder="Remark"></textarea>
+            </div>
+            <div class="input-group mb-2">
+                <button type="submit" id="course_register" class="btn btn-primary btn-sm col-md-3 ml-auto">Register</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+    $('#course_register').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#coursename").text('').removeClass("text-danger");
+                $("#duration").text('').removeClass("text-danger");
+                $("#fees").text('').removeClass("text-danger");
+                $("#course_code").text('').removeClass("text-danger");
+                $('#course_register')[0].reset();
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+            }
+            else{
+                if(data['coursename']){
+                    $("#coursename").text(data['coursename']).addClass("text-danger");
+                }
+                else{
+                    $("#coursename").text('').removeClass("text-danger");
+                }
+
+                if(data['duration']){
+                    $("#duration").text(data['duration']).addClass("text-danger");
+                }
+                else{
+                    $("#duration").text('').removeClass("text-danger");
+                }
+                if(data['fees']){
+                $("#fees").text(data['fees']).addClass("text-danger");
+                }
+                else{
+                    $("#fees").text('').removeClass("text-danger");
+                }
+                if(data['course_code']){
+                $("#course_code").text(data['course_code']).addClass("text-danger");
+                }
+                else{
+                    $("#course_code").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+
+    $('#course_update').on('submit',function(e){
+        e.preventDefault();
+        $.ajax({
+        type:'POST',
+        cache    : false,
+        url: $(this).attr('action'),
+        data:$(this).serialize(),
+        success:function(data){
+            if(data['success']){
+                $("#success").text(data['success']).addClass("alert alert-success");
+                $("#coursename").text('').removeClass("text-danger");
+                $("#duration").text('').removeClass("text-danger");
+                $("#fees").text('').removeClass("text-danger");
+                $("#timming").text('').removeClass("text-danger");
+                setTimeout(function(){
+                $('#success').text('').removeClass("alert alert-success");
+                }, 5000);
+            }
+            else{
+                if(data['coursename']){
+                    $("#coursename").text(data['coursename']).addClass("text-danger");
+                }
+                else{
+                    $("#coursename").text('').removeClass("text-danger");
+                }
+
+                if(data['duration']){
+                    $("#duration").text(data['duration']).addClass("text-danger");
+                }
+                else{
+                    $("#duration").text('').removeClass("text-danger");
+                }
+                if(data['fees']){
+                $("#fees").text(data['fees']).addClass("text-danger");
+                }
+                else{
+                    $("#fees").text('').removeClass("text-danger");
+                }
+                if(data['course_code']){
+                $("#course_code").text(data['course_code']).addClass("text-danger");
+                }
+                else{
+                    $("#course_code").text('').removeClass("text-danger");
+                }
+            }
+        },
+        });
+    });
+    $('#delete_course').on('click',function(e){
+        e.preventDefault();
+        var course_id = $(this).data('course-id');
+        var url = $(this).attr('href');
+        delete_course(course_id,url);
+    });
+    });
+    function delete_course(id,url){
+        var confirmed = confirm("Are you sure you want to delete?");
+        if (confirmed){
+            $.ajax({
+            type: 'POST',
+            url: url,
+            data: {id:id, csrfmiddlewaretoken: '{{ csrf_token  }}'},
+            success: function (data) {
+                window.location.href = "{% url 'course-view' %}";
+            }
+        });
+        }
+    }
+    
+</script>
+{% endblock content %}

@@ -1,0 +1,98 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h4 mb-0 text-gray-800">Courses</h1>
+    <a href="{% url 'course-form' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Add New Course</a>
+</div>
+<div class="row">
+<div class="col-md-12">
+<div class="card-body">
+    <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Course Name</th>
+                        <th>Duration</th>
+                        <th>Fees</th>
+                        <th>Code</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'course-edit' course.id %}">{{course.coursename}}</a></td>
+                        <td>{{course.duration}}</td>
+                        <td>{{course.fees}}</td>
+                        <td>{{course.course_code}}</td>
+                        <td>{{course.remark}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Course Name</th>
+                        <th>Duration</th>
+                        <th>Fees</th>
+                        <th>Code</th>
+                        <th>Remark</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+<script>
+    // $(document).ready(function(){
+    // $('form').on('submit',function(e){
+    //     e.preventDefault();
+    //     $.ajax({
+    //     type:'POST',
+    //     cache    : false,
+    //     url: $(this).attr('action'),
+    //     data:$(this).serialize(),
+    //     success:function(data){
+    //         if(data['success']){
+    //             $("#success").text(data['success']).addClass("alert alert-success");
+    //             $("#coursename").text('').removeClass("text-danger");
+    //             $("#duration").text('').removeClass("text-danger");
+    //             $("#fees").text('').removeClass("text-danger");
+    //             $('#form')[0].reset();
+    //             setTimeout(function(){
+    //             $('#success').text('').removeClass("alert alert-success");
+    //             }, 5000);
+    //         }
+    //         else{
+    //             if(data['coursename']){
+    //                 $("#coursename").text(data['coursename']).addClass("text-danger");
+    //             }
+    //             else{
+    //                 $("#coursename").text('').removeClass("text-danger");
+    //             }
+
+    //             if(data['duration']){
+    //                 $("#duration").text(data['duration']).addClass("text-danger");
+    //             }
+    //             else{
+    //                 $("#duration").text('').removeClass("text-danger");
+    //             }
+    //             if(data['fees']){
+    //             $("#fees").text(data['fees']).addClass("text-danger");
+    //             }
+    //             else{
+    //                 $("#fees").text('').removeClass("text-danger");
+    //             }
+    //         }
+    //     },
+    //     });
+    // });
+    // });
+    
+</script>
+{% endblock content %}

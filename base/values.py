@@ -1,0 +1,6 @@
+def decimal_numeric(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
