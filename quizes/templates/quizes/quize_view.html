@@ -1,0 +1,24 @@
+{% extends 'dashboard/main.html' %}
+{% block content %}
+<div class="h3">Quize List</div>
+<hr>
+{% for obj in object_list %}
+<button 
+    class="btn btn-link model-button" 
+    data-pk="{{obj.pk}}"
+    data-quiz="{{obj.name}}"
+    data-questions="{{obj.number_of_questions}}"
+    data-difficulty="{{obj.difficulty}}"
+    data-time="{{obj.time}}"
+    data-bs-toggle="model"
+    data-bs-target="#quize_model" class="btn btn-success" pd-popup-open="popupNew">
+    {{obj.name}}
+</button>
+{% endfor %}
+<div class="popup" pd-popup="popupNew">
+<div class="popup-inner">
+<p><a pd-popup-close="popupNew" href="#" class="btn btn-danger">Close</a></p>
+<a class="popup-close" pd-popup-close="popupNew" href="#"></a>
+</div>
+</div>
+{% endblock content %}
